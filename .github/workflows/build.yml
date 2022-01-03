@@ -40,9 +40,11 @@ jobs:
         if: ${{ matrix.os == 'macos-latest' }}
         run: opam install dune>=2.9.0
 
-      - name: Build PDF book
+      - name: Build book
         if: runner.os == 'Linux'
-        run: opam exec -- dune build @pdf
+        run: opam exec -- dune build
 
-      - name: Run promotion tests
-        run: opam exec -- dune runtest
+      - name: Upload artifacts (html, pdf, md, tex)
+        uses: actions/upload-artifact@v2
+        with:
+          path: ./_build/default/static
