@@ -46,6 +46,7 @@ jobs:
       - name: Upload artifacts (html, pdf, md, tex)
         uses: actions/upload-artifact@v2
         with:
+          name: static
           path: ./_build/default/static
 
       - name: Upload PDF artifact
@@ -55,9 +56,11 @@ jobs:
           path: ./_build/default/static/book.pdf
           
       - name: Convert to EPUB
+        working-directory: ./_build/default/static
         run: pandoc book.md -o book.epub
 
       - name: Convert to MOBI
+        working-directory: ./_build/default/static
         run: ebook-convert book.epub book.mobi
 
       - name: Upload EPUB artifact
