@@ -2,10 +2,6 @@ name: Main workflow
 
 on:
   pull_request:
-  push:
-  schedule:
-    # Prime the caches every Monday
-    - cron: 0 1 * * MON
 
 jobs:
   build:
@@ -28,7 +24,7 @@ jobs:
         run: brew install pandoc
 
       - name: Install LaTeX dependencies
-        run: sudo apt-get update && sudo apt-get -y install texlive-full
+        run: sudo apt-get update && sudo apt-get -y install texlive-science texlive-font-utils
 
       - name: Use OCaml ${{ matrix.ocaml-compiler }}
         uses: ocaml/setup-ocaml@v2
@@ -48,3 +44,9 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           path: ./_build/default/static
+
+      - name: Upload PDF artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: book.pdf
+          path: ./_build/default/static/book.pdf
