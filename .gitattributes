@@ -1,3 +1,4 @@
 examples/code/command-line-parsing/basic_md5_with_flags/basic_md5_with_flags.sh diff
 duniverse/** linguist-vendored
 **/pygments/** linguist-vendored
+**/embed_out.c linguist-generated
