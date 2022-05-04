@@ -1,12 +1,16 @@
 examples/code/command-line-parsing/basic_md5_with_flags/basic_md5_with_flags.sh diff
+
 duniverse/** linguist-vendored
-**/pygments/** linguist-vendored
+**/pygments/** linguist-generated
 **/embed_out.c linguist-generated
+
 **/colour-blind.sty linguist-vendored
 **/EngD.cls linguist-vendored
+
 /static/js/** linguist-vendored
-!/static/js/app.js
 /static/css/** linguist-vendored
+!/static/js/app.js
 !/static/css/app.css
+
 *.inc linguist-language=none
 *.ml linguist-language=ocaml
