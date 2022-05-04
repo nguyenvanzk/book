@@ -2,3 +2,9 @@ examples/code/command-line-parsing/basic_md5_with_flags/basic_md5_with_flags.sh 
 duniverse/** linguist-vendored
 **/pygments/** linguist-vendored
 **/embed_out.c linguist-generated
+**/colour-blind.sty linguist-vendored
+**/EngD.cls linguist-vendored
+/static/js/** linguist-vendored
+!/static/js/app.js
+/static/css/** linguist-vendored
+!/static/css/app.css
