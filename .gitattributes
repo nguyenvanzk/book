@@ -8,3 +8,5 @@ duniverse/** linguist-vendored
 !/static/js/app.js
 /static/css/** linguist-vendored
 !/static/css/app.css
+*.inc linguist-language=none
+*.ml linguist-language=ocaml
