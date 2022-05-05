@@ -9,8 +9,9 @@ duniverse/** linguist-vendored
 
 /static/js/** linguist-vendored
 /static/css/** linguist-vendored
-!/static/js/app.js
-!/static/css/app.css
+/static/js/app.js -linguist-vendored
+/static/css/app.css -linguist-vendored
 
-*.inc linguist-language=none
-*.ml linguist-language=ocaml
+*.inc linguist-language=None
+*.ml linguist-language=OCaml
+*.mli linguist-language=OCaml
