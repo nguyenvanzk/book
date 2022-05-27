@@ -276,7 +276,7 @@ chapter by using some POSIX date functions as running
 examples.
 
 ::: {data-type=note}
-#### Linking modes: libffi and stub generation
+#### Linking Modes: libffi and Stub Generation
 
 The core of ctypes is a set of OCaml combinators for describing the structure of C
 types (numeric types, arrays, pointers, structs, unions and functions). You can
@@ -738,7 +738,7 @@ And we can now call that function to get the current time.
 - : float = 1650045389.278065
 ```
 
-#### Recap: A time-printing command
+#### Recap: a Time-Printing Command
 
 We built up a lot of bindings in the previous section, so let's recap them
 with a complete example that ties it together with a command-line frontend:
@@ -1185,16 +1185,6 @@ You can find more information about the C interface in several places:
   that provides examples of how to call OCaml functions from C. This covers a
   wide variety of OCaml data types and also more complex callbacks between C
   and OCaml.
-
-<!-- TODO: Is SWIG actually any good? I looked at it years ago and
-     thought it was really painful to use with OCaml.  Should we
-     really be recommending it? I don't know off-hand of any packages
-     using it. -->
-
-- [SWIG](http://www.swig.org) is a tool that connects programs written in
-  C/C++ to a variety of higher-level programming languages, including OCaml.
-  The SWIG manual has examples of converting library specifications into
-  OCaml bindings.
 
 ### Struct Memory Layout
 
