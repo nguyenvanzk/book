@@ -17,7 +17,8 @@ which is a collection of memory regions that it obtains from the
 operating system. The runtime uses this memory to hold <em>heap
 blocks</em> that it fills up with OCaml values in response to allocation
 requests by the OCaml program. <a data-secondary="allocation
-requests and" data-primary="values" data-type="indexterm">&nbsp;</a><a data-secondary="heap blocks" data-primary="heaps" data-type="indexterm">&nbsp;</a><a data-secondary="definition of" data-primary="heaps" data-type="indexterm">&nbsp;</a></p>
+requests and" data-primary="values" data-type="indexterm">&nbsp;</a>  <a data-secondary="heap blocks" data-primary="heaps" data-type="indexterm">&nbsp;</a> <a data-secondary="definition
+of" data-primary="heaps" data-type="indexterm">&nbsp;</a></p>
 <section class="level2" id="mark-and-sweep-garbage-collection">
 <h2>Mark and Sweep Garbage Collection</h2>
 <p>When there isn’t enough memory available to satisfy an allocation
@@ -126,7 +127,7 @@ space left for the block without decrementing past <code>limit</code>, a
 minor garbage collection is triggered. This is a very fast check (with
 no branching) on most CPU architectures.</p>
 <section class="level4" id="understanding-allocation">
-<h4>Understanding allocation</h4>
+<h4>Understanding Allocation</h4>
 <p>You may wonder why <code>limit</code> is required at all, since it
 always seems to equal <code>start</code>. It’s because the easiest way
 for the runtime to schedule a minor heap collection is by setting
@@ -273,7 +274,7 @@ block in the major heap. The default free list search is called
 <em>first-fit</em> algorithms also available. <a data-primary="best-fit
 allocation" data-type="indexterm">&nbsp;</a><a data-primary="first-fit allocation" data-type="indexterm">&nbsp;</a><a data-primary="next-fit allocation" data-type="indexterm">&nbsp;</a></p>
 <section class="level4" id="best-fit-allocation">
-<h4>Best-fit allocation</h4>
+<h4>Best-Fit Allocation</h4>
 <p>The best-fit allocator is a combination of two strategies. The first,
 size-segregated free lists, is based on the observation that nearly all
 major heap allocations in OCaml are small (consider list elements and
@@ -297,7 +298,7 @@ represents a good trade-off between the allocation cost (in terms of CPU
 work) and heap fragmentation.</p>
 </section>
 <section class="level4" id="next-fit-allocation">
-<h4>Next-fit allocation</h4>
+<h4>Next-Fit Allocation</h4>
 <p>Next-fit allocation keeps a pointer to the block in the free list
 that was most recently used to satisfy a request. When a new request
 comes in, the allocator searches from the next block to the end of the
@@ -311,7 +312,7 @@ allocations are small, large blocks at the start of the free list become
 heavily fragmented.</p>
 </section>
 <section class="level4" id="first-fit-allocation">
-<h4>First-fit allocation</h4>
+<h4>First-Fit Allocation</h4>
 <p>If your program allocates values of many varied sizes, you may
 sometimes find that your free list becomes fragmented. In this
 situation, the GC is forced to perform an expensive compaction despite
@@ -455,7 +456,7 @@ compiler introduces a write barrier to update this so-called
 <em>remembered set</em> whenever a major-heap block is modified to point
 at a minor-heap block. <a data-primary="write barriers" data-type="indexterm">&nbsp;</a><a data-primary="remembered sets" data-type="indexterm">&nbsp;</a></p>
 <section class="level4" id="the-mutable-write-barrier">
-<h4>The mutable write barrier</h4>
+<h4>The Mutable Write Barrier</h4>
 <p>The write barrier can have profound implications for the structure of
 your code. It’s one of the reasons using immutable data structures and
 allocating a fresh copy with changes can sometimes be faster than
@@ -537,9 +538,10 @@ write-barrier hit and not allocate at all.</p>
 <p>The only way to know for sure is to benchmark your program under
 real-world scenarios using <code>Core_bench</code> and experiment with
 the trade-offs. The command-line benchmark binaries have a number of
-useful options that affect garbage collection behavior:</p>
+useful options that affect garbage collection behavior and the output
+format:</p>
 <div class="highlight">
-<pre data-filter-output=">" data-host="lama" data-user="fun" class="command-line"><code class="language-bash">dune exec -- ./barrier_bench.exe -help | head -13
+<pre data-filter-output=">" data-host="lama" data-user="fun" class="command-line"><code class="language-bash">dune exec -- ./barrier_bench.exe -help
 &gt;Benchmark for mutable, immutable
 &gt;
 &gt;  barrier_bench.exe [COLUMN ...]
@@ -552,15 +554,9 @@ useful options that affect garbage collection behavior:</p>
 &gt;   percentage - Relative execution time as a percentage.
 &gt;   speedup    - Relative execution cost as a speedup.
 &gt;   samples    - Number of samples collected for profiling.
+...
 </code></pre>
 </div>
-
-
-<p>The <code>-no-compactions</code> and <code>-stabilize-gc</code>
-options can help force a situation where your application has fragmented
-memory. This can simulate the behavior of a long-running application
-without you having to actually wait that long to recreate the behavior
-in a performance unit test.</p>
 </section>
 </section>
 </section>
@@ -588,20 +584,13 @@ is in the major or minor heap, and rejects most constant values.
 Compiler optimizations may also duplicate some immutable values such as
 floating-point values in arrays. These may be finalized while another
 duplicate copy is being used by the program.</p>
-<p>For this reason, attach finalizers only to values that you are
-explicitly sure are heap-allocated and aren’t immutable. A common use is
-to attach them to file descriptors to ensure they are closed.  However, the finalizer normally
-shouldn’t be the primary way of closing the file descriptor, since it
-depends on the GC running in order to collect the value. For a busy
-system, you can easily run out of a scarce resource such as file
-descriptors before the GC catches up.</p>
 </section>
 <p>Core provides a <code>Heap_block</code> module that dynamically
 checks if a given value is suitable for finalizing. Core keeps the
-functions for registering finalizers in the <code>Expert</code> module
-finalizers can be pretty hard to reason about in multi-threaded
-contexts, since finalizers can run at any time in any thread. <a data-secondary="Heap_block module" data-primary="heaps" data-type="indexterm">&nbsp;</a></p>
-<p>Async, which we discussed in <a data-type="xref" href="concurrent-programming.html#concurrent-programming-with-async">Chapter 16, Concurrent Programming with Async</a>, shadows the
+functions for registering finalizers in the <code>Core.Gc.Expert</code>
+module. Finalizers can run at any time in any thread, so they can be
+pretty hard to reason about in multi-threaded contexts. <a data-secondary="Heap_block module" data-primary="heaps" data-type="indexterm">&nbsp;</a> Async, which we discussed in
+<a data-type="xref" href="concurrent-programming.html#concurrent-programming-with-async">Chapter 16, Concurrent Programming with Async</a>, shadows the
 <code>Gc</code> module with its own module that contains a function,
 <code>Gc.add_finalizer</code>, which is concurrency-safe. In particular,
 finalizers are scheduled in their own Async job, and care is taken by
@@ -609,9 +598,7 @@ Async to capture exceptions and raise them to the appropriate monitor
 for error-handling. <a data-secondary="finalizers" data-primary="Async
 library" data-type="indexterm">&nbsp;</a></p>
 <p>Let’s explore this with a small example that finalizes values of
-different types, some of which are heap-allocated and others which are
-compile-time constants:</p>
-
+different types, all of which are heap-allocated.</p>
 <div class="highlight">
 <pre><code class="language-ocaml">open Core
 open Async
@@ -626,18 +613,9 @@ let attach_finalizer n v =
 type t = { foo : bool }
 
 let main () =
-  let allocated_float = Unix.gettimeofday () in
-  let allocated_bool = Float.is_positive allocated_float in
-  let allocated_string = Bytes.create 4 in
-  attach_finalizer "immediate int" 1;
-  attach_finalizer "immediate float" 1.0;
-  attach_finalizer "immediate variant" (`Foo "hello");
-  attach_finalizer "immediate string" "hello world";
-  attach_finalizer "immediate record" { foo = false };
-  attach_finalizer "allocated bool" allocated_bool;
-  attach_finalizer "allocated variant" (`Foo allocated_bool);
-  attach_finalizer "allocated string" allocated_string;
-  attach_finalizer "allocated record" { foo = allocated_bool };
+  attach_finalizer "allocated variant" (`Foo (Random.bool ()));
+  attach_finalizer "allocated string" (Bytes.create 4);
+  attach_finalizer "allocated record" { foo = (Random.bool ()) };
   Gc.compact ();
   return ()
 
@@ -650,9 +628,6 @@ let () =
 <p>Building and running this should show the following output:</p>
 <div class="highlight">
 <pre data-filter-output=">" data-host="lama" data-user="fun" class="command-line"><code class="language-bash">dune exec -- ./finalizer.exe
-&gt;       immediate int: FAIL
-&gt;     immediate float: FAIL
-&gt;      allocated bool: FAIL
 &gt;    allocated record: OK
 &gt;    allocated string: OK
 &gt;   allocated variant: OK

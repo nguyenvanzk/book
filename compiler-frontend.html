@@ -51,8 +51,8 @@ portable interpreter and can even be transformed into JavaScript (via <a href="h
 suitable for high-performance applications.<a data-secondary="compiler source code" data-primary="compilation
 process" data-type="indexterm">&nbsp;</a><a data-secondary="bytecode
 vs.&nbsp;native code" data-primary="compilers" data-type="indexterm">&nbsp;</a></p>
-<section data-type="note" class="level4" id="obtaining-the-compiler-source-code">
-<h4>Obtaining the Compiler Source Code</h4>
+<section class="level3" id="obtaining-the-compiler-source-code">
+<h3>Obtaining the Compiler Source Code</h3>
 <p>Although it’s not necessary to understand the examples, you may find
 it useful to have a copy of the OCaml source tree checked out while you
 read through this chapter. The source code is available from multiple
@@ -137,9 +137,9 @@ with the compiler.
 Regression tests for the core compiler.
 </dd>
 </dl>
-</section>
 <p>We’ll go through each of the compilation stages now and explain how
 they will be useful to you during day-to-day OCaml development.</p>
+</section>
 </section>
 <section class="level2" id="parsing-source-code">
 <h2>Parsing Source Code</h2>
@@ -187,104 +187,6 @@ successfully:</p>
 token that couldn’t be parsed. In the broken example, the
 <code>module</code> keyword isn’t a valid token at that point in
 parsing, so the error location information is correct.</p>
-
-</section>
-<section class="level3" id="automatically-indenting-source-code">
-<h3>Automatically Indenting Source Code</h3>
-<p>Sadly, syntax errors do get more inaccurate sometimes, depending on
-the nature of your mistake. Try to spot the deliberate error in the
-following function definitions: <a data-secondary="automatically indenting" data-primary="source
-code" data-type="indexterm">&nbsp;</a></p>
-<div class="highlight">
-<pre><code class="language-ocaml">let concat_and_print x y =
-  let v = x ^ y in
-  print_endline v;
-  v;
-
-let add_and_print x y =
-  let v = x + y in
-  print_endline (string_of_int v);
-  v
-
-let () =
-  let _x = add_and_print 1 2 in
-  let _y = concat_and_print "a" "b" in
-  ()</code></pre>
-</div>
-<p>When you compile this file, you’ll get a syntax error again:</p>
-<div class="highlight">
-<pre data-filter-output=">" data-host="lama" data-user="fun" class="command-line"><code class="language-bash">ocamlc -c follow_on_function.ml
-&gt;File "follow_on_function.ml", line 11, characters 0-3:
-&gt;11 | let () =
-&gt;     ^^^
-&gt;Error: Syntax error
-[2]</code></pre>
-</div>
-<p>The line number in the error points to the end of the
-<code>add_and_print</code> function, but the actual error is at the end
-of the <em>first</em> function definition. There’s an extra semicolon at
-the end of the first definition that causes the second definition to
-become part of the first <code>let</code> binding. This eventually
-results in a parsing error at the very end of the second function.</p>
-<p>This class of bug (due to a single errant character) can be hard to
-spot in a large body of code. Luckily, there’s a great tool available
-via OPAM called <code>ocp-indent</code> that applies structured
-indenting rules to your source code on a line-by-line basis. This not
-only beautifies your code layout, but it also makes this syntax error
-much easier to locate.<a data-secondary="single errant
-characters" data-primary="debugging" data-type="indexterm">&nbsp;</a></p>
-<p>Let’s run our erroneous file through <code>ocp-indent</code> and see
-how it processes it:</p>
-<div class="highlight">
-<pre data-filter-output=">" data-host="lama" data-user="fun" class="command-line"><code class="language-bash">ocp-indent follow_on_function.ml
-&gt;let concat_and_print x y =
-&gt;  let v = x ^ y in
-&gt;  print_endline v;
-&gt;  v;
-&gt;
-&gt;  let add_and_print x y =
-&gt;    let v = x + y in
-&gt;    print_endline (string_of_int v);
-&gt;    v
-&gt;
-&gt;let () =
-&gt;  let _x = add_and_print 1 2 in
-&gt;  let _y = concat_and_print "a" "b" in
-&gt;  ()
-</code></pre>
-</div>
-<p>The <code>add_and_print</code> definition has been indented as if it
-were part of the first <code>concat_and_print</code> definition, and the
-errant semicolon is now much easier to spot. We just need to remove that
-semicolon and rerun <code>ocp-indent</code> to verify that the syntax is
-correct:</p>
-<div class="highlight">
-<pre data-filter-output=">" data-host="lama" data-user="fun" class="command-line"><code class="language-bash">ocp-indent follow_on_function_fixed.ml
-&gt;let concat_and_print x y =
-&gt;  let v = x ^ y in
-&gt;  print_endline v;
-&gt;  v
-&gt;
-&gt;let add_and_print x y =
-&gt;  let v = x + y in
-&gt;  print_endline (string_of_int v);
-&gt;  v
-&gt;
-&gt;let () =
-&gt;  let _x = add_and_print 1 2 in
-&gt;  let _y = concat_and_print "a" "b" in
-&gt;  ()
-</code></pre>
-</div>
-<p>The <code>ocp-indent</code> <a href="https://github.com/OCamlPro/ocp-indent">homepage</a> documents how
-to integrate it with your favorite editor. You can also use
-<code>ocamlformat</code> to format your files, as described earlier in
-<a data-type="xref" href="platform.html#autoformatting-your-source-code">Chapter 21, OCaml Platform</a>. <code>ocamlformat</code> goes
-farther than <code>ocp-indent</code>, fully determining your formatting,
-including all line-breaks. <code>Base</code>, <code>Core</code> and
-related libraries are all formatted using <code>ocamlformat</code> to
-ensure consistency, and using some kind of automatic formatting is a
-good practice before publishing your own source code online.</p>
 </section>
 <section class="level3" id="generating-documentation-from-interfaces">
 <h3>Generating Documentation from Interfaces</h3>
@@ -461,7 +363,7 @@ let exit_with = function
 </div>
 </section>
 <section class="level3" id="commonly-used-extension-attributes">
-<h3>Commonly used extension attributes</h3>
+<h3>Commonly Used Extension Attributes</h3>
 <p>We have already used extension points in <a data-type="xref" href="data-serialization.html#data-serialization-with-s-expressions">Chapter 20, Data Serialization With S Expressions</a> to generate
 boilerplate code for handling s-expressions. These are introduced by a
 third-party library using the <code>(preprocess)</code> directive in a
@@ -647,7 +549,7 @@ principal type inference, but by and large, most programs you write will
 never <em>require</em> annotations (although they sometimes help the
 compiler produce better error messages).</p>
 <section class="level4" id="adding-type-annotations-to-find-errors">
-<h4>Adding type annotations to find errors</h4>
+<h4>Adding Type Annotations to Find Errors</h4>
 <p>It’s often said that the hardest part of writing OCaml code is
 getting past the type checker—but once the code does compile, it works
 correctly the first time! This is an exaggeration of course, but it can
@@ -787,7 +689,7 @@ annotations there, of course, to help with future refactoring and
 debugging.</p>
 </section>
 <section class="level4" id="enforcing-principal-typing">
-<h4>Enforcing principal typing</h4>
+<h4>Enforcing Principal Typing</h4>
 <p>The compiler also has a stricter <em>principal type checking</em>
 mode that is activated via the <code>-principal</code> flag. This warns
 about risky uses of type information to ensure that the type inference
@@ -910,7 +812,7 @@ or two files, and the module system minimizes such recompilation while
 still encouraging code reuse. <a data-primary="compilation
 units" data-type="indexterm">&nbsp;</a></p>
 <section class="level4" id="the-mapping-between-files-and-modules">
-<h4>The mapping between files and modules</h4>
+<h4>The Mapping Between Files and Modules</h4>
 <p>Individual compilation units provide a convenient way to break up a
 big module hierarchy into a collection of files. The relationship
 between files and modules can be explained directly in terms of the
@@ -936,7 +838,7 @@ end</code></pre>
 </div>
 </section>
 <section class="level4" id="defining-a-module-search-path">
-<h4>Defining a module search path</h4>
+<h4>Defining a Module Search Path</h4>
 <p>In the preceding example, <code>Alice</code> also has a reference to
 another module <code>Bob</code>. For the overall type of
 <code>Alice</code> to be valid, the compiler also needs to check that
@@ -1018,7 +920,7 @@ files and recompile from scratch.</p>
 </section>
 </section>
 <section class="level3" id="wrapping-libraries-with-module-aliases">
-<h3>Wrapping libraries with module aliases</h3>
+<h3>Wrapping Libraries with Module Aliases</h3>
 <p>The module-to-file mapping described so far rigidly enforces a 1:1
 mapping between a top-level module and a file. It’s often convenient to
 split larger modules into separate files to make editing easier, but
